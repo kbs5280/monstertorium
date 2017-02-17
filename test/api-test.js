@@ -74,4 +74,35 @@ describe('POST /monsters', () => {
         .expect(404, done);
     });
   });
+
+  describe('DELETE /monster/:id', () => {
+
+    beforeEach(() => {
+      app.locals.monsters = [{ id: 1, name: 'Steve', level: 3 }];
+    });
+
+    afterEach(() => {
+      app.locals.monsters = [];
+    });
+
+    it('should delete a monster', (done) => {
+      const monster = app.locals.monsters[0];
+
+      request(app)
+        .delete(`/monsters/${monster.id}`)
+        .expect(204)
+        .end(() => {
+          assert.equal(app.locals.monsters.length, 0);
+          done();
+        });
+    });
+
+    it('should return 404 if id is invalid', (done) => {
+      request(app)
+        .delete(`/monsters/invalid`)
+        .expect(404, done);
+    });
+
+  });
+
 });

@@ -41,4 +41,15 @@ app.put('/monsters/:id', (request, response) => {
   return response.sendStatus(204);
 });
 
+app.delete('/monsters/:id', (request, response) => {
+  const id = parseInt(request.params.id, 10);
+  if (!app.locals.monsters.find((m) => m.id === id)) {
+    return response.status(404).send({
+      error: `There is no monster with the "id" of ${id}.`
+    });
+  }
+  app.locals.monsters = app.locals.monsters.filter((m) => m.id !== id);
+  response.sendStatus(204);
+});
+
 module.exports = app;
