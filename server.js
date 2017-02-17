@@ -28,4 +28,17 @@ app.post('/monsters', (request, response) => {
   response.status(201).send({ monster: monster });
 });
 
+app.put('/monsters/:id', (request, response) => {
+  const monster = request.body.monster;
+  const id = parseInt(request.params.id, 10);
+  const index = app.locals.monsters.findIndex((m) => m.id === id);
+
+  if (index === -1) { return response.sendStatus(404); }
+
+  const oldMonster = app.locals.monsters[index];
+  app.locals.monsters[index] = Object.assign(oldMonster, monster);
+
+  return response.sendStatus(204);
+});
+
 module.exports = app;

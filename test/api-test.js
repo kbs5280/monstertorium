@@ -44,4 +44,34 @@ describe('POST /monsters', () => {
         done();
       });
   });
+
+  describe('UPDATE /monsters/:id', (done) => {
+
+    beforeEach(() => {
+      app.locals.monsters = [{ id: 1, name: 'Steve', level: 2 }];
+    });
+
+    afterEach(() => {
+      app.locals.monsters = [];
+    });
+
+    it('should update a record by id', (done) => {
+      const monster = app.locals.monsters[0];
+
+      request(app)
+        .put(`/monsters/${monster.id}`)
+        .send({ monster: {name: 'Louisa' }})
+        .expect(204)
+        .end(() => {
+          assert.equal(app.locals.monsters[0].name, 'Louisa');
+          done();;
+        });
+    });
+
+    it('should return a 404 status if there is no monster', (done) => {
+      request(app)
+        .delete('/monsters/invalid')
+        .expect(404, done);
+    });
+  });
 });
